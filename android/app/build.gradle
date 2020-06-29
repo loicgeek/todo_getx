@@ -51,6 +51,9 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
         }
+         debug{
+            minifyEnabled true
+        }
     }
 }
 
@@ -61,3 +64,7 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
+
+// Add the following line:
+apply plugin: 'com.google.gms.google-services'  // Google Services plugin
+

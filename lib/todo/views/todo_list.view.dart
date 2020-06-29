@@ -1,18 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:todo_app_getx/auth/auth.controller.dart';
 
-import 'package:todo_app_getx/todo/controllers/todo.controller.dart';
+import 'package:todo_app_getx/todo/todo.controller.dart';
 import 'package:todo_app_getx/todo/widgets/todo_item.dart';
 
 class TodoList extends StatelessWidget {
-  const TodoList({Key key}) : super(key: key);
+  TodoList({Key key}) : super(key: key);
+  AuthController authController = AuthController.to;
   @override
   Widget build(BuildContext context) {
     TodoController c = Get.put<TodoController>(TodoController());
     return Scaffold(
       appBar: AppBar(
-        title: Text("Todo List"),
+        title: Obx(() => authController.user != null
+            ? Text(" ${authController?.user?.value?.email}")
+            : Container()),
         centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.exit_to_app),
+              onPressed: () {
+                authController.handleSignOut();
+              })
+        ],
       ),
       body: Obx(() {
         if (c.isLoadingTodos.value) {
