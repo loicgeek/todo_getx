@@ -1,12 +1,10 @@
 # todo_app_getx
 
-A new Flutter project.
+A todo app using Getx package for routing and state manager.
 
-## Getting Started
+## Demo
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
+![Todo with GetX Demo](./gifs/demo.gif)
 
 - [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
 - [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
