@@ -1,10 +1,11 @@
 import 'package:get/get.dart';
+import 'package:todo_app_getx/auth/auth.controller.dart';
 import 'package:todo_app_getx/todo/models/todo.model.dart';
-import 'package:todo_app_getx/todo/services/todo.service.dart';
+import 'package:todo_app_getx/todo/todo.service.dart';
 
 class TodoController extends GetxController {
   static TodoController to = Get.find();
-  RxList<Todo> todos = <Todo>[].obs;
+  RxList todos = [].obs;
   RxBool isLoadingTodos = false.obs;
   RxBool isAddingTodo = false.obs;
   RxBool isLoadingDetails = false.obs;
@@ -15,19 +16,12 @@ class TodoController extends GetxController {
   }
 
   onInit() {
-    this.loadTodos();
+    todos.bindStream(loadTodos());
   }
 
-  loadTodos() async {
-    try {
-      isLoadingTodos.value = true;
-      var result = await _todoService.findAll();
-      todos.addAll(result);
-      isLoadingTodos.value = false;
-    } catch (e) {
-      isLoadingTodos.value = false;
-      print(e);
-    }
+  Stream<Iterable<Todo>> loadTodos() {
+    AuthController authController = AuthController.to;
+    return _todoService.findAll(authController.user.value.uid);
   }
 
   Future<Todo> loadDetails(String id) async {
@@ -42,8 +36,10 @@ class TodoController extends GetxController {
 
   addTodo(String title) async {
     try {
+      AuthController authController = AuthController.to;
       isAddingTodo.value = true;
-      var todo = await _todoService.addOne(title);
+      var todo =
+          await _todoService.addOne(authController.user.value.uid, title);
       todos.add(todo);
       Get.snackbar("Success", todo.title, snackPosition: SnackPosition.BOTTOM);
       isAddingTodo.value = false;
