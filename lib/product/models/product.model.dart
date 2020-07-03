@@ -7,6 +7,7 @@ class Product {
   String name;
   double price;
   String desc;
+  int quantity;
   String userId;
   String username;
   Category category;
@@ -18,6 +19,7 @@ class Product {
     this.name,
     this.price,
     this.desc,
+    this.quantity,
     this.userId,
     this.username,
     this.category,

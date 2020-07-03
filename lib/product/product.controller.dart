@@ -24,7 +24,11 @@ class ProductController extends GetxController {
     productPrice = TextEditingController();
     productDesc = TextEditingController();
     productQty = TextEditingController();
-    productList.bindStream(productService.findAll());
+    productList.bindStream(loadProducts());
+  }
+
+  Stream<List<Product>> loadProducts() {
+    return productService.findAll();
   }
 
   @override

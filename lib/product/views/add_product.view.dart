@@ -1,7 +1,14 @@
+import 'dart:async';
+import 'dart:typed_data';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:todo_app_getx/auth/auth.controller.dart';
+import 'package:todo_app_getx/product/models/image.model.dart';
 import 'package:todo_app_getx/product/product.controller.dart';
+import 'package:todo_app_getx/product/product.service.dart';
 
 class AddProductPage extends StatefulWidget {
   @override
@@ -12,6 +19,7 @@ class _AddProductPageState extends State<AddProductPage> {
   final ProductController productController = Get.put(ProductController());
 
   List<Asset> images = List<Asset>();
+  List<ImageModel> remoteImages = List<ImageModel>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +29,9 @@ class _AddProductPageState extends State<AddProductPage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.save),
-            onPressed: () {},
+            onPressed: () {
+              saveProduct();
+            },
           )
         ],
       ),
@@ -140,10 +150,78 @@ class _AddProductPageState extends State<AddProductPage> {
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
     if (!mounted) return;
+    if (resultList != null) {
+      setState(() {
+        resultList.addAll(images);
+        images = resultList;
+      });
+    }
+  }
 
-    setState(() {
-      resultList.addAll(images);
-      images = resultList;
+  void saveProduct() {
+    var user = AuthController.to.user.value;
+    ProductService productService = new ProductService();
+    Get.snackbar(
+      "Saving",
+      "",
+      messageText: Row(
+        children: <Widget>[
+          Container(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          )
+        ],
+      ),
+    );
+    productService
+        .addOne(
+      userId: user.uid,
+      name: productController.productName.text,
+      price: double.parse(productController.productPrice.text),
+      quantity: int.parse(productController.productQty.text),
+      desc: productController.productDesc.text,
+      username: user.displayName,
+    )
+        .then((product) async {
+      for (var i = 0; i < images.length; i++) {
+        var img = await saveImage(images[i]);
+        print(img);
+        remoteImages.add(img);
+      }
+      productService.addGallery(product.id, remoteImages);
+      setState(() {
+        remoteImages = [];
+        images = [];
+        productController.productName.clear();
+        productController.productPrice.clear();
+        productController.productQty.clear();
+        productController.productDesc.clear();
+      });
+      Get.snackbar("Success", "Product saved");
     });
   }
+}
+
+Future<ImageModel> saveImage(Asset asset) async {
+  ByteData byteData = await asset.getByteData();
+  List<int> imageData = byteData.buffer.asUint8List();
+  var now = DateTime.now().millisecondsSinceEpoch;
+  StorageReference ref = FirebaseStorage.instance.ref().child("$now.jpg");
+  StorageUploadTask uploadTask = ref.putData(imageData);
+  final StreamSubscription<StorageTaskEvent> streamSubscription =
+      uploadTask.events.listen((event) {
+    // You can use this to notify yourself or your user in any kind of way.
+    // For example: you could use the uploadTask.events stream in a StreamBuilder instead
+    // to show your user what the current status is. In that case, you would not need to cancel any
+    // subscription as StreamBuilder handles this automatically.
+
+    // Here, every StorageTaskEvent concerning the upload is printed to the logs.
+    print('EVENT ${event.type}');
+  });
+  var storageSnapshot = await uploadTask.onComplete;
+// Cancel your subscription when done.
+  streamSubscription.cancel();
+  var url = await storageSnapshot.ref.getDownloadURL();
+  return ImageModel(id: "$now", url: url);
 }
