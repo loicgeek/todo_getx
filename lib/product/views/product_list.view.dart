@@ -3,22 +3,24 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:todo_app_getx/product/product.controller.dart';
 import 'package:todo_app_getx/product/widgets/single_product.dart';
+import 'package:todo_app_getx/widgets/app_drawer.dart';
 
 class ProductListPage extends StatelessWidget {
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final ProductController productController = ProductController.to;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
+      drawer: AppDrawer(),
       appBar: AppBar(
         title: Text("Snap Sell"),
         centerTitle: true,
-        leading: GestureDetector(
-            onTap: () {
+        leading: IconButton(
+            onPressed: () {
               scaffoldKey.currentState.openDrawer();
             },
-            child: Icon(Icons.menu)),
+            icon: Icon(Icons.menu)),
       ),
       body: Obx(() {
         return Padding(

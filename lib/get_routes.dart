@@ -14,7 +14,7 @@ class AppRoutes {
     ),
     GetPage(
       name: '/',
-      page: () => SnapSell(), //TodoList(),
+      page: () => SnapSell(), //(uncomment here to swith to todo app)TodoList(),
     ),
     GetPage(
       name: '/login',
@@ -23,6 +23,10 @@ class AppRoutes {
     GetPage(
       name: '/register',
       page: () => RegisterPage(),
+    ),
+    GetPage(
+      name: '/todos',
+      page: () => TodoList(),
     ),
     GetPage(
       name: '/todos/:id/edit',

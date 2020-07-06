@@ -161,9 +161,8 @@ class _AddProductPageState extends State<AddProductPage> {
   void saveProduct() {
     var user = AuthController.to.user.value;
     ProductService productService = new ProductService();
-    Get.snackbar(
-      "Saving",
-      "",
+    Get.rawSnackbar(
+      title: "Saving",
       messageText: Row(
         children: <Widget>[
           Container(
