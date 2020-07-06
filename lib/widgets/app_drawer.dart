@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:todo_app_getx/auth/auth.controller.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -42,7 +43,31 @@ class AppDrawer extends StatelessWidget {
               )
             ],
           ),
-        )
+        ),
+        ListTile(
+          onTap: () {
+            Get.offAllNamed("/");
+          },
+          title: Text("Switch to Snap Sell"),
+          trailing: Icon(Icons.camera),
+        ),
+        Divider(),
+        ListTile(
+          onTap: () {
+            Get.offAllNamed("/todos");
+          },
+          title: Text("Switch to Todo App"),
+          trailing: Icon(Icons.swap_horizontal_circle),
+        ),
+        Divider(),
+        ListTile(
+          onTap: () {
+            authController.handleSignOut();
+          },
+          title: Text("Logout"),
+          trailing: Icon(Icons.exit_to_app),
+        ),
+        Divider(),
       ],
     ));
   }

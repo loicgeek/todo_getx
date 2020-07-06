@@ -19,13 +19,10 @@ class AuthController extends GetxController {
 
   @override
   void onInit() async {
-    ever(isLogged, handleAuthChanged);
+    ever(user, handleAuthChanged);
     user.value = await _authService.getCurrentUser();
-    isLogged.value = user.value != null;
-    _authService.onAuthChanged().listen((event) {
-      isLogged.value = event != null;
-      user.value = event;
-    });
+
+    user.bindStream(_authService.onAuthChanged());
     emailController = TextEditingController();
     passwordController = TextEditingController();
     super.onInit();
@@ -38,8 +35,8 @@ class AuthController extends GetxController {
     super.onClose();
   }
 
-  handleAuthChanged(isLoggedIn) {
-    if (isLoggedIn == false) {
+  handleAuthChanged(user) {
+    if (user == null) {
       Get.offAllNamed("/login");
     } else {
       Get.offAllNamed("/");

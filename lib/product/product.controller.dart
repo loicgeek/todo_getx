@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todo_app_getx/product/product.service.dart';
-
+import 'package:todo_app_getx/auth/auth.controller.dart';
 import 'models/category.model.dart';
 import 'models/product.model.dart';
 
@@ -22,6 +22,7 @@ class ProductController extends GetxController {
   //
 
   RxList<Product> productList = <Product>[].obs;
+  RxList<Product> userProductsList = <Product>[].obs;
   ProductService productService;
   ProductController() {
     productService = ProductService();

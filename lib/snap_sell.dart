@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_app_getx/product/views/add_product.view.dart';
 import 'package:todo_app_getx/product/views/edit_product.view.dart';
 import 'package:todo_app_getx/product/views/product_list.view.dart';
-import 'package:todo_app_getx/product/views/user_products.views.dart';
+import 'package:todo_app_getx/product/views/user_products.view.dart';
 import 'package:todo_app_getx/widgets/app_drawer.dart';
 
 class SnapSell extends StatefulWidget {
@@ -27,7 +27,6 @@ class _SnapSellState extends State<SnapSell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: AppDrawer(),
       body: PageView(
         controller: pageController,
         children: <Widget>[

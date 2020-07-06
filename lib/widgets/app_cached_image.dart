@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
 
 class AppCachedImage extends StatefulWidget {
   final String url;
@@ -26,7 +25,7 @@ class _AppCachedImageState extends State<AppCachedImage> {
       errorWidget: (context, url, error) {
         return widget.imageBuilder.call(
           context,
-          AssetImage("assets/images/default_image.jpeg"),
+          AssetImage("assets/images/default_image.jpg"),
         );
       },
     );
