@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:todo_app_getx/product/product.controller.dart';
 import 'package:todo_app_getx/product/widgets/single_product.dart';
 
 class ProductListPage extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-  final ProductController productController = Get.put(ProductController());
+  final ProductController productController = ProductController.to;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,13 +21,20 @@ class ProductListPage extends StatelessWidget {
             child: Icon(Icons.menu)),
       ),
       body: Obx(() {
-        return ListView.builder(
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: StaggeredGridView.countBuilder(
+            crossAxisCount: 4,
             itemCount: productController.productList.length,
-            itemBuilder: (context, index) {
-              return SingleProduct(
-                product: productController.productList[index],
-              );
-            });
+            itemBuilder: (BuildContext context, int index) => SingleProduct(
+              product: productController.productList[index],
+            ),
+            staggeredTileBuilder: (int index) =>
+                new StaggeredTile.count(2, index == 2 ? 2 : 3),
+            mainAxisSpacing: 4.0,
+            crossAxisSpacing: 4.0,
+          ),
+        );
       }),
     );
   }

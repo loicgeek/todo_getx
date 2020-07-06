@@ -6,11 +6,20 @@ import 'models/category.model.dart';
 import 'models/product.model.dart';
 
 class ProductController extends GetxController {
+  static ProductController to = Get.find();
   TextEditingController productName;
   TextEditingController productPrice;
   TextEditingController productDesc;
   TextEditingController productQty;
   Category productCategory;
+
+  //
+  bool isLoadingDetails = false;
+  bool errorLoadingDetails = false;
+  bool successLoadingDetails = false;
+  Product activeProduct;
+
+  //
 
   RxList<Product> productList = <Product>[].obs;
   ProductService productService;
@@ -29,6 +38,21 @@ class ProductController extends GetxController {
 
   Stream<List<Product>> loadProducts() {
     return productService.findAll();
+  }
+
+  loadDetails(String productId) async {
+    try {
+      isLoadingDetails = true;
+      errorLoadingDetails = false;
+      activeProduct = await productService.findOne(productId);
+      print(activeProduct);
+      isLoadingDetails = false;
+      successLoadingDetails = true;
+    } catch (e) {
+      isLoadingDetails = false;
+      successLoadingDetails = false;
+      errorLoadingDetails = true;
+    }
   }
 
   @override

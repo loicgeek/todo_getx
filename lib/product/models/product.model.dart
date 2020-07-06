@@ -33,6 +33,10 @@ class Product {
       name: snap.data["name"],
       price: snap.data['price'],
       desc: snap.data['desc'],
+      username: snap.data['username'],
+      userId: snap.data['user_id'],
+      gallery: List<ImageModel>.from(
+          snap.data['gallery'].map((e) => ImageModel.fromJson(e))),
     );
   }
 

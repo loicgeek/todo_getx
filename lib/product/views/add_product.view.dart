@@ -16,7 +16,7 @@ class AddProductPage extends StatefulWidget {
 }
 
 class _AddProductPageState extends State<AddProductPage> {
-  final ProductController productController = Get.put(ProductController());
+  final ProductController productController = ProductController.to;
 
   List<Asset> images = List<Asset>();
   List<ImageModel> remoteImages = List<ImageModel>();
@@ -186,7 +186,6 @@ class _AddProductPageState extends State<AddProductPage> {
         .then((product) async {
       for (var i = 0; i < images.length; i++) {
         var img = await saveImage(images[i]);
-        print(img);
         remoteImages.add(img);
       }
       productService.addGallery(product.id, remoteImages);
@@ -217,6 +216,8 @@ Future<ImageModel> saveImage(Asset asset) async {
     // subscription as StreamBuilder handles this automatically.
 
     // Here, every StorageTaskEvent concerning the upload is printed to the logs.
+    print(
+        "${(event.snapshot.bytesTransferred * 100 / event.snapshot.totalByteCount)}%");
     print('EVENT ${event.type}');
   });
   var storageSnapshot = await uploadTask.onComplete;

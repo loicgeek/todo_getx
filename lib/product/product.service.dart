@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:todo_app_getx/product/models/image.model.dart';
 
@@ -5,11 +7,22 @@ import './models/product.model.dart';
 
 class ProductService {
   CollectionReference productsRef = Firestore.instance.collection("products");
-
+  final StreamController<List<Product>> _productsController =
+      StreamController<List<Product>>.broadcast();
   Stream<List<Product>> findAll() {
-    return productsRef.getDocuments().then((value) {
-      return value.documents.map((e) => Product.fromSnapshot(e)).toList();
-    }).asStream();
+    // Register the handler for when the products data changes
+    productsRef.snapshots().listen((productsSnapshot) {
+      if (productsSnapshot.documents.isNotEmpty) {
+        var products = productsSnapshot.documents
+            .map((snapshot) => Product.fromSnapshot(snapshot))
+            .toList();
+        print(products.length);
+        // Add the products onto the controller
+        _productsController.add(products);
+      }
+    });
+    // Return the stream underlying our _productsController.
+    return _productsController.stream;
   }
 
   Future<Product> findOne(String id) async {
