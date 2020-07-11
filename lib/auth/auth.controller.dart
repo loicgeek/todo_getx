@@ -18,7 +18,7 @@ class AuthController extends GetxController {
   }
 
   @override
-  void onInit() async {
+  void onReady() async {
     ever(user, handleAuthChanged);
     user.value = await _authService.getCurrentUser();
 
