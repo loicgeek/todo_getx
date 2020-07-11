@@ -29,7 +29,7 @@ class ProductController extends GetxController {
   }
 
   @override
-  onInit() {
+  onReady() {
     productName = TextEditingController();
     productPrice = TextEditingController();
     productDesc = TextEditingController();
